@@ -1,2 +1,4 @@
-# anglue-decorators
-Anglue Decorators
+connect-decorators
+==================
+
+Component, Store and Actions decorators
