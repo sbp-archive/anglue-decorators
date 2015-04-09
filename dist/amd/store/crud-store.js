@@ -150,7 +150,7 @@ define(["exports", "../utils"], function (exports, _utils) {
                     this.isSaving = false;
 
                     if ("appActions" in this && "publishErrorMessage" in this.appActions) {
-                        this.appActions.publishErrorMessage("Error: " + response.statusText, JSON.stringify(response.data));
+                        this.appActions.publishErrorMessage(response.statusText, JSON.stringify(response.data));
                     }
 
                     if ("onFailed" in this.owner) {
@@ -170,21 +170,33 @@ define(["exports", "../utils"], function (exports, _utils) {
                         items: {
                             get: function () {
                                 return crud.items;
+                            },
+                            set: function (items) {
+                                crud.items = items;
                             }
                         },
                         isLoaded: {
                             get: function () {
                                 return crud.isLoaded;
+                            },
+                            set: function (isLoaded) {
+                                crud.isLoaded = isLoaded;
                             }
                         },
                         isLoading: {
                             get: function () {
                                 return crud.isLoading;
+                            },
+                            set: function (isLoading) {
+                                crud.isLoading = isLoading;
                             }
                         },
                         isSaving: {
                             get: function () {
                                 return crud.isSaving;
+                            },
+                            set: function (isSaving) {
+                                crud.isSaving = isSaving;
                             }
                         },
                         isEmpty: {

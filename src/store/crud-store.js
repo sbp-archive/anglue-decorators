@@ -11,21 +11,33 @@ export class CrudStoreDecorator {
             items: {
                 get: () => {
                     return crud.items;
+                },
+                set: (items) => {
+                   crud.items = items;
                 }
             },
             isLoaded: {
                 get: () => {
                     return crud.isLoaded;
+                },
+                set: (isLoaded) => {
+                    crud.isLoaded = isLoaded;
                 }
             },
             isLoading: {
                 get: () => {
                     return crud.isLoading;
+                },
+                set: (isLoading) => {
+                    crud.isLoading = isLoading;
                 }
             },
             isSaving: {
                 get: () => {
                     return crud.isSaving;
+                },
+                set: (isSaving) => {
+                    crud.isSaving = isSaving;
                 }
             },
             isEmpty: {
@@ -182,7 +194,7 @@ export class CrudStoreDecorator {
 
         if ('appActions' in this && 'publishErrorMessage' in this.appActions) {
             this.appActions.publishErrorMessage(
-                'Error: ' + response.statusText,
+                response.statusText,
                 JSON.stringify(response.data)
             );
         }
