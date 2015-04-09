@@ -192,7 +192,6 @@ define(["exports", "../utils"], function (exports, _utils) {
                                 return crud.isEmpty;
                             }
                         },
-
                         hasDetails: {
                             value: crud.hasDetails.bind(crud)
                         },
@@ -200,6 +199,8 @@ define(["exports", "../utils"], function (exports, _utils) {
                             value: crud.getById.bind(crud)
                         },
                         onItemsChanged: {
+                            configurable: true,
+                            writable: true,
                             value: function () {}
                         }
                     });

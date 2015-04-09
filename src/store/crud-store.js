@@ -33,7 +33,6 @@ export class CrudStoreDecorator {
                     return crud.isEmpty;
                 }
             },
-
             hasDetails: {
                 value: crud.hasDetails.bind(crud)
             },
@@ -41,6 +40,8 @@ export class CrudStoreDecorator {
                 value: crud.getById.bind(crud)
             },
             onItemsChanged: {
+                configurable: true,
+                writable: true,
                 value: () => {}
             }
         });
