@@ -1,21 +1,21 @@
-define(["exports", "../utils"], function (exports, _utils) {
-    "use strict";
+define(['exports', '../utils'], function (exports, _utils) {
+    'use strict';
 
-    var _interopRequire = function (obj) { return obj && obj.__esModule ? obj["default"] : obj; };
+    var _interopRequire = function (obj) { return obj && obj.__esModule ? obj['default'] : obj; };
 
-    var _slicedToArray = function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { var _arr = []; for (var _iterator = arr[Symbol.iterator](), _step; !(_step = _iterator.next()).done;) { _arr.push(_step.value); if (i && _arr.length === i) break; } return _arr; } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } };
+    var _slicedToArray = function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i['return']) _i['return'](); } finally { if (_d) throw _e; } } return _arr; } else { throw new TypeError('Invalid attempt to destructure non-iterable instance'); } };
 
-    var _createClass = (function () { function defineProperties(target, props) { for (var key in props) { var prop = props[key]; prop.configurable = true; if (prop.value) prop.writable = true; } Object.defineProperties(target, props); } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+    var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } };
 
-    var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } };
+    var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-    Object.defineProperty(exports, "__esModule", {
+    Object.defineProperty(exports, '__esModule', {
         value: true
     });
 
-    var DecoratorUtils = _interopRequire(_utils);
+    var _DecoratorUtils = _interopRequire(_utils);
 
-    var SortableStoreDecorator = exports.SortableStoreDecorator = (function () {
+    var SortableStoreDecorator = (function () {
         function SortableStoreDecorator(owner) {
             _classCallCheck(this, SortableStoreDecorator);
 
@@ -23,95 +23,94 @@ define(["exports", "../utils"], function (exports, _utils) {
             this.sorters = new Map();
         }
 
-        _createClass(SortableStoreDecorator, {
-            onItemsChanged: {
-                value: function onItemsChanged() {
-                    this.doSort();
-                }
-            },
-            doSort: {
-                value: function doSort() {
-                    var sorted = this.owner.items;
-                    var _iteratorNormalCompletion = true;
-                    var _didIteratorError = false;
-                    var _iteratorError = undefined;
-
-                    try {
-                        for (var _iterator = this.sorters.entries()[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-                            var _step$value = _slicedToArray(_step.value, 2);
-
-                            var key = _step$value[0];
-                            var sortFn = _step$value[1];
-
-                            sorted = sortFn(sorted);
-                        }
-                    } catch (err) {
-                        _didIteratorError = true;
-                        _iteratorError = err;
-                    } finally {
-                        try {
-                            if (!_iteratorNormalCompletion && _iterator["return"]) {
-                                _iterator["return"]();
-                            }
-                        } finally {
-                            if (_didIteratorError) {
-                                throw _iteratorError;
-                            }
-                        }
-                    }
-
-                    this.owner.items = sorted;
-                    this.owner.onItemsSorted(sorted);
-                }
-            },
-            onSortChange: {
-                value: function onSortChange(sortInfo) {
-                    var _this = this;
-
-                    var property = sortInfo.property;
-                    var reverse = sortInfo.reverse;
-
-                    this.sorters.set("__sort", function (items) {
-                        return _this.owner.filterService("orderBy")(items, property, reverse);
-                    });
-
-                    // We have to go through onItemsChanged so that other decorators can react
-                    // to this as well.
-                    this.owner.onItemsChanged();
-                }
-            },
-            onItemsSorted: {
-                value: function onItemsSorted() {}
+        _createClass(SortableStoreDecorator, [{
+            key: 'onItemsChanged',
+            value: function onItemsChanged() {
+                this.doSort();
             }
         }, {
-            decorateClass: {
-                value: function decorateClass(cls) {
-                    DecoratorUtils.addInjections(cls, {
-                        filterService: "$filter"
-                    });
-                }
-            },
-            decorate: {
-                value: function decorate(owner) {
-                    var sortable = new SortableStoreDecorator(owner);
+            key: 'doSort',
+            value: function doSort() {
+                var sorted = this.owner.items;
+                var _iteratorNormalCompletion = true;
+                var _didIteratorError = false;
+                var _iteratorError = undefined;
 
-                    Object.defineProperties(owner, {
-                        sortable: {
-                            value: sortable
+                try {
+                    for (var _iterator = this.sorters.entries()[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                        var _step$value = _slicedToArray(_step.value, 2);
+
+                        var key = _step$value[0];
+                        var sortFn = _step$value[1];
+
+                        sorted = sortFn(sorted);
+                    }
+                } catch (err) {
+                    _didIteratorError = true;
+                    _iteratorError = err;
+                } finally {
+                    try {
+                        if (!_iteratorNormalCompletion && _iterator['return']) {
+                            _iterator['return']();
                         }
-                    });
-
-                    DecoratorUtils.intercept(owner, sortable, "doSort");
-                    DecoratorUtils.intercept(owner, sortable, "onSortChange");
-                    DecoratorUtils.intercept(owner, sortable, "onItemsSorted");
-                    DecoratorUtils.intercept(owner, sortable, "onItemsChanged");
+                    } finally {
+                        if (_didIteratorError) {
+                            throw _iteratorError;
+                        }
+                    }
                 }
+
+                this.owner.items = sorted;
+                this.owner.onItemsSorted(sorted);
             }
-        });
+        }, {
+            key: 'onSortChange',
+            value: function onSortChange(sortInfo) {
+                var _this = this;
+
+                var property = sortInfo.property;
+                var reverse = sortInfo.reverse;
+
+                this.sorters.set('__sort', function (items) {
+                    return _this.owner.filterService('orderBy')(items, property, reverse);
+                });
+
+                // We have to go through onItemsChanged so that other decorators can react
+                // to this as well.
+                this.owner.onItemsChanged();
+            }
+        }, {
+            key: 'onItemsSorted',
+            value: function onItemsSorted() {}
+        }], [{
+            key: 'decorateClass',
+            value: function decorateClass(cls) {
+                _DecoratorUtils.addInjections(cls, {
+                    filterService: '$filter'
+                });
+            }
+        }, {
+            key: 'decorate',
+            value: function decorate(owner) {
+                var sortable = new SortableStoreDecorator(owner);
+
+                Object.defineProperties(owner, {
+                    sortable: {
+                        value: sortable
+                    }
+                });
+
+                _DecoratorUtils.intercept(owner, sortable, 'doSort');
+                _DecoratorUtils.intercept(owner, sortable, 'onSortChange');
+                _DecoratorUtils.intercept(owner, sortable, 'onItemsSorted');
+                _DecoratorUtils.intercept(owner, sortable, 'onItemsChanged');
+            }
+        }]);
 
         return SortableStoreDecorator;
     })();
 
-    exports["default"] = SortableStoreDecorator;
+    exports.SortableStoreDecorator = SortableStoreDecorator;
+    exports['default'] = SortableStoreDecorator;
 });
 //# sourceMappingURL=sortable-store.js.map
