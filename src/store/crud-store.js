@@ -1,49 +1,26 @@
-import DecoratorUtils from '../utils';
+import utils from '../utils';
 
 export class CrudStoreDecorator {
     static decorate(owner) {
-        var crud = new CrudStoreDecorator(owner);
+        var crud        = new CrudStoreDecorator(owner);
+        var properties  = [
+            "items",
+            "isLoaded",
+            "isLoading",
+            "isSaving",
+            "isEmpty",
+            "loadFailed",
+            "getFailed",
+            "createFailed",
+            "updateFailed",
+            "deleteFailed"
+        ];
+
+        utils.addDecoratorProperties(owner, crud, properties);
 
         Object.defineProperties(owner, {
             crud: {
                 value: crud
-            },
-            items: {
-                get: () => {
-                    return crud.items;
-                },
-                set: (items) => {
-                   crud.items = items;
-                }
-            },
-            isLoaded: {
-                get: () => {
-                    return crud.isLoaded;
-                },
-                set: (isLoaded) => {
-                    crud.isLoaded = isLoaded;
-                }
-            },
-            isLoading: {
-                get: () => {
-                    return crud.isLoading;
-                },
-                set: (isLoading) => {
-                    crud.isLoading = isLoading;
-                }
-            },
-            isSaving: {
-                get: () => {
-                    return crud.isSaving;
-                },
-                set: (isSaving) => {
-                    crud.isSaving = isSaving;
-                }
-            },
-            isEmpty: {
-                get: () => {
-                    return crud.isEmpty;
-                }
             },
             hasDetails: {
                 value: crud.hasDetails.bind(crud)
@@ -58,35 +35,48 @@ export class CrudStoreDecorator {
             }
         });
 
-        DecoratorUtils.intercept(owner, crud, 'onLoadStarted');
-        DecoratorUtils.intercept(owner, crud, 'onCreateStarted');
-        DecoratorUtils.intercept(owner, crud, 'onGetStarted');
-        DecoratorUtils.intercept(owner, crud, 'onUpdateStarted');
-        DecoratorUtils.intercept(owner, crud, 'onDeleteStarted');
+        utils.intercept(owner, crud, 'initialize');
 
-        DecoratorUtils.intercept(owner, crud, 'onLoadCompleted');
-        DecoratorUtils.intercept(owner, crud, 'onCreateCompleted');
-        DecoratorUtils.intercept(owner, crud, 'onGetCompleted');
-        DecoratorUtils.intercept(owner, crud, 'onUpdateCompleted');
-        DecoratorUtils.intercept(owner, crud, 'onDeleteCompleted');
+        utils.intercept(owner, crud, 'onLoadStarted');
+        utils.intercept(owner, crud, 'onCreateStarted');
+        utils.intercept(owner, crud, 'onGetStarted');
+        utils.intercept(owner, crud, 'onUpdateStarted');
+        utils.intercept(owner, crud, 'onDeleteStarted');
 
-        DecoratorUtils.intercept(owner, crud, 'onLoadFailed');
-        DecoratorUtils.intercept(owner, crud, 'onCreateFailed');
-        DecoratorUtils.intercept(owner, crud, 'onGetFailed');
-        DecoratorUtils.intercept(owner, crud, 'onUpdateFailed');
-        DecoratorUtils.intercept(owner, crud, 'onDeleteFailed');
+        utils.intercept(owner, crud, 'onLoadCompleted');
+        utils.intercept(owner, crud, 'onCreateCompleted');
+        utils.intercept(owner, crud, 'onGetCompleted');
+        utils.intercept(owner, crud, 'onUpdateCompleted');
+        utils.intercept(owner, crud, 'onDeleteCompleted');
+
+        utils.intercept(owner, crud, 'onLoadFailed');
+        utils.intercept(owner, crud, 'onCreateFailed');
+        utils.intercept(owner, crud, 'onGetFailed');
+        utils.intercept(owner, crud, 'onUpdateFailed');
+        utils.intercept(owner, crud, 'onDeleteFailed');
     }
 
     constructor(owner) {
         this.owner = owner;
 
+        this.initialize();
+    }
+
+    initialize() {
         this.items = [];
         this.isLoaded = false;
         this.isLoading = false;
         this.isSaving = false;
 
+        this.loadFailed = false;
+        this.getFailed = false;
+        this.createFailed = false;
+        this.updateFailed = false;
+        this.deleteFailed = false;
+
         this.hasDetailsMap = {};
     }
+
 
     get isEmpty() {
         return this.isLoaded && this.items.length === 0;
@@ -104,22 +94,27 @@ export class CrudStoreDecorator {
 
     onLoadStarted() {
         this.isLoading = true;
+        this.loadFailed = false;
     }
 
     onGetStarted() {
         this.isLoading = true;
+        this.getFailed = false;
     }
 
     onUpdateStarted() {
         this.isSaving = true;
+        this.updateFailed = false;
     }
 
     onCreateStarted() {
         this.isSaving = true;
+        this.createFailed = false;
     }
 
     onDeleteStarted() {
         this.isSaving = true;
+        this.deleteFailed = false;
     }
 
     onLoadCompleted(all) {
@@ -169,22 +164,27 @@ export class CrudStoreDecorator {
     }
 
     onLoadFailed(response) {
+        this.loadFailed = true;
         this.onFailed(response);
     }
 
     onCreateFailed(response) {
+        this.createFailed = true;
         this.onFailed(response);
     }
 
     onGetFailed(response) {
+        this.getFailed = true;
         this.onFailed(response);
     }
 
     onUpdateFailed(response) {
+        this.updateFailed = true;
         this.onFailed(response);
     }
 
     onDeleteFailed(response) {
+        this.deleteFailed = true;
         this.onFailed(response);
     }
 

@@ -86,6 +86,25 @@ define(['exports'], function (exports) {
                     }).bind(decorator, obj[methodName])
                 });
             }
+        }, {
+            key: 'addDecoratorProperty',
+            value: function addDecoratorProperty(obj, decorator, propertyName) {
+                Object.defineProperty(obj, propertyName, {
+                    get: function get() {
+                        return decorator[propertyName];
+                    },
+                    set: function set(value) {
+                        decorator[propertyName] = value;
+                    }
+                });
+            }
+        }, {
+            key: 'addDecoratorProperties',
+            value: function addDecoratorProperties(obj, decorator, properties) {
+                properties.forEach(function (property) {
+                    DecoratorUtils.addDecoratorProperty(obj, decorator, property);
+                });
+            }
         }]);
 
         return DecoratorUtils;

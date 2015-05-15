@@ -45,6 +45,23 @@ export class DecoratorUtils {
             }).bind(decorator, obj[methodName])
         });
     }
+
+    static addDecoratorProperty(obj, decorator, propertyName) {
+        Object.defineProperty(obj, propertyName, {
+            get: () => {
+                return decorator[propertyName];
+            },
+            set: (value) => {
+                decorator[propertyName] = value;
+            }
+        });
+    }
+
+    static addDecoratorProperties(obj, decorator, properties) {
+        properties.forEach((property) => {
+            DecoratorUtils.addDecoratorProperty(obj, decorator, property);
+        });
+    }
 }
 
 export default DecoratorUtils;

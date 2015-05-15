@@ -1,17 +1,17 @@
-define(['exports', '../utils'], function (exports, _utils) {
-    'use strict';
+define(["exports", "../utils"], function (exports, _utils) {
+    "use strict";
 
-    var _interopRequire = function (obj) { return obj && obj.__esModule ? obj['default'] : obj; };
+    var _interopRequire = function (obj) { return obj && obj.__esModule ? obj["default"] : obj; };
 
-    var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } };
+    var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } };
 
-    var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+    var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-    Object.defineProperty(exports, '__esModule', {
+    Object.defineProperty(exports, "__esModule", {
         value: true
     });
 
-    var _DecoratorUtils = _interopRequire(_utils);
+    var _utils2 = _interopRequire(_utils);
 
     var CrudStoreDecorator = (function () {
         function CrudStoreDecorator(owner) {
@@ -19,58 +19,74 @@ define(['exports', '../utils'], function (exports, _utils) {
 
             this.owner = owner;
 
-            this.items = [];
-            this.isLoaded = false;
-            this.isLoading = false;
-            this.isSaving = false;
-
-            this.hasDetailsMap = {};
+            this.initialize();
         }
 
         _createClass(CrudStoreDecorator, [{
-            key: 'isEmpty',
+            key: "initialize",
+            value: function initialize() {
+                this.items = [];
+                this.isLoaded = false;
+                this.isLoading = false;
+                this.isSaving = false;
+
+                this.loadFailed = false;
+                this.getFailed = false;
+                this.createFailed = false;
+                this.updateFailed = false;
+                this.deleteFailed = false;
+
+                this.hasDetailsMap = {};
+            }
+        }, {
+            key: "isEmpty",
             get: function () {
                 return this.isLoaded && this.items.length === 0;
             }
         }, {
-            key: 'getById',
+            key: "getById",
             value: function getById(id) {
                 return this.items.find(function (element) {
                     return element.id === id;
                 });
             }
         }, {
-            key: 'hasDetails',
+            key: "hasDetails",
             value: function hasDetails(id) {
                 return !!this.hasDetailsMap[id];
             }
         }, {
-            key: 'onLoadStarted',
+            key: "onLoadStarted",
             value: function onLoadStarted() {
                 this.isLoading = true;
+                this.loadFailed = false;
             }
         }, {
-            key: 'onGetStarted',
+            key: "onGetStarted",
             value: function onGetStarted() {
                 this.isLoading = true;
+                this.getFailed = false;
             }
         }, {
-            key: 'onUpdateStarted',
+            key: "onUpdateStarted",
             value: function onUpdateStarted() {
                 this.isSaving = true;
+                this.updateFailed = false;
             }
         }, {
-            key: 'onCreateStarted',
+            key: "onCreateStarted",
             value: function onCreateStarted() {
                 this.isSaving = true;
+                this.createFailed = false;
             }
         }, {
-            key: 'onDeleteStarted',
+            key: "onDeleteStarted",
             value: function onDeleteStarted() {
                 this.isSaving = true;
+                this.deleteFailed = false;
             }
         }, {
-            key: 'onLoadCompleted',
+            key: "onLoadCompleted",
             value: function onLoadCompleted(all) {
                 this.isLoading = false;
                 this.isLoaded = true;
@@ -78,7 +94,7 @@ define(['exports', '../utils'], function (exports, _utils) {
                 this.owner.onItemsChanged();
             }
         }, {
-            key: 'onGetCompleted',
+            key: "onGetCompleted",
             value: function onGetCompleted(item) {
                 this.isLoading = false;
                 if (!this.getById(item.id)) {
@@ -90,26 +106,26 @@ define(['exports', '../utils'], function (exports, _utils) {
                 this.owner.onItemsChanged();
             }
         }, {
-            key: 'onCreateCompleted',
+            key: "onCreateCompleted",
             value: function onCreateCompleted(item) {
                 this.isSaving = false;
                 this.items.push(item);
                 this.owner.onItemsChanged();
             }
         }, {
-            key: 'onUpdateCompleted',
+            key: "onUpdateCompleted",
             value: function onUpdateCompleted(item) {
                 this.isSaving = false;
                 Object.assign(this.getById(item.id), item);
 
-                if ('appActions' in this && 'publishSuccessMessage' in this.appActions) {
-                    this.appActions.publishSuccessMessage('Update completed');
+                if ("appActions" in this && "publishSuccessMessage" in this.appActions) {
+                    this.appActions.publishSuccessMessage("Update completed");
                 }
 
                 this.owner.onItemsChanged();
             }
         }, {
-            key: 'onDeleteCompleted',
+            key: "onDeleteCompleted",
             value: function onDeleteCompleted(item) {
                 this.isSaving = false;
                 item = this.getById(item.id);
@@ -119,89 +135,60 @@ define(['exports', '../utils'], function (exports, _utils) {
                 this.owner.onItemsChanged();
             }
         }, {
-            key: 'onLoadFailed',
+            key: "onLoadFailed",
             value: function onLoadFailed(response) {
+                this.loadFailed = true;
                 this.onFailed(response);
             }
         }, {
-            key: 'onCreateFailed',
+            key: "onCreateFailed",
             value: function onCreateFailed(response) {
+                this.createFailed = true;
                 this.onFailed(response);
             }
         }, {
-            key: 'onGetFailed',
+            key: "onGetFailed",
             value: function onGetFailed(response) {
+                this.getFailed = true;
                 this.onFailed(response);
             }
         }, {
-            key: 'onUpdateFailed',
+            key: "onUpdateFailed",
             value: function onUpdateFailed(response) {
+                this.updateFailed = true;
                 this.onFailed(response);
             }
         }, {
-            key: 'onDeleteFailed',
+            key: "onDeleteFailed",
             value: function onDeleteFailed(response) {
+                this.deleteFailed = true;
                 this.onFailed(response);
             }
         }, {
-            key: 'onFailed',
+            key: "onFailed",
             value: function onFailed(response) {
                 this.isLoading = false;
                 this.isSaving = false;
 
-                if ('appActions' in this && 'publishErrorMessage' in this.appActions) {
+                if ("appActions" in this && "publishErrorMessage" in this.appActions) {
                     this.appActions.publishErrorMessage(response.statusText, JSON.stringify(response.data));
                 }
 
-                if ('onFailed' in this.owner) {
+                if ("onFailed" in this.owner) {
                     this.owner.onFailed(response);
                 }
             }
         }], [{
-            key: 'decorate',
+            key: "decorate",
             value: function decorate(owner) {
                 var crud = new CrudStoreDecorator(owner);
+                var properties = ["items", "isLoaded", "isLoading", "isSaving", "isEmpty", "loadFailed", "getFailed", "createFailed", "updateFailed", "deleteFailed"];
+
+                _utils2.addDecoratorProperties(owner, crud, properties);
 
                 Object.defineProperties(owner, {
                     crud: {
                         value: crud
-                    },
-                    items: {
-                        get: function get() {
-                            return crud.items;
-                        },
-                        set: function set(items) {
-                            crud.items = items;
-                        }
-                    },
-                    isLoaded: {
-                        get: function get() {
-                            return crud.isLoaded;
-                        },
-                        set: function set(isLoaded) {
-                            crud.isLoaded = isLoaded;
-                        }
-                    },
-                    isLoading: {
-                        get: function get() {
-                            return crud.isLoading;
-                        },
-                        set: function set(isLoading) {
-                            crud.isLoading = isLoading;
-                        }
-                    },
-                    isSaving: {
-                        get: function get() {
-                            return crud.isSaving;
-                        },
-                        set: function set(isSaving) {
-                            crud.isSaving = isSaving;
-                        }
-                    },
-                    isEmpty: {
-                        get: function get() {
-                            return crud.isEmpty;
-                        }
                     },
                     hasDetails: {
                         value: crud.hasDetails.bind(crud)
@@ -216,23 +203,25 @@ define(['exports', '../utils'], function (exports, _utils) {
                     }
                 });
 
-                _DecoratorUtils.intercept(owner, crud, 'onLoadStarted');
-                _DecoratorUtils.intercept(owner, crud, 'onCreateStarted');
-                _DecoratorUtils.intercept(owner, crud, 'onGetStarted');
-                _DecoratorUtils.intercept(owner, crud, 'onUpdateStarted');
-                _DecoratorUtils.intercept(owner, crud, 'onDeleteStarted');
+                _utils2.intercept(owner, crud, "initialize");
 
-                _DecoratorUtils.intercept(owner, crud, 'onLoadCompleted');
-                _DecoratorUtils.intercept(owner, crud, 'onCreateCompleted');
-                _DecoratorUtils.intercept(owner, crud, 'onGetCompleted');
-                _DecoratorUtils.intercept(owner, crud, 'onUpdateCompleted');
-                _DecoratorUtils.intercept(owner, crud, 'onDeleteCompleted');
+                _utils2.intercept(owner, crud, "onLoadStarted");
+                _utils2.intercept(owner, crud, "onCreateStarted");
+                _utils2.intercept(owner, crud, "onGetStarted");
+                _utils2.intercept(owner, crud, "onUpdateStarted");
+                _utils2.intercept(owner, crud, "onDeleteStarted");
 
-                _DecoratorUtils.intercept(owner, crud, 'onLoadFailed');
-                _DecoratorUtils.intercept(owner, crud, 'onCreateFailed');
-                _DecoratorUtils.intercept(owner, crud, 'onGetFailed');
-                _DecoratorUtils.intercept(owner, crud, 'onUpdateFailed');
-                _DecoratorUtils.intercept(owner, crud, 'onDeleteFailed');
+                _utils2.intercept(owner, crud, "onLoadCompleted");
+                _utils2.intercept(owner, crud, "onCreateCompleted");
+                _utils2.intercept(owner, crud, "onGetCompleted");
+                _utils2.intercept(owner, crud, "onUpdateCompleted");
+                _utils2.intercept(owner, crud, "onDeleteCompleted");
+
+                _utils2.intercept(owner, crud, "onLoadFailed");
+                _utils2.intercept(owner, crud, "onCreateFailed");
+                _utils2.intercept(owner, crud, "onGetFailed");
+                _utils2.intercept(owner, crud, "onUpdateFailed");
+                _utils2.intercept(owner, crud, "onDeleteFailed");
             }
         }]);
 
@@ -240,6 +229,6 @@ define(['exports', '../utils'], function (exports, _utils) {
     })();
 
     exports.CrudStoreDecorator = CrudStoreDecorator;
-    exports['default'] = CrudStoreDecorator;
+    exports["default"] = CrudStoreDecorator;
 });
 //# sourceMappingURL=crud-store.js.map
