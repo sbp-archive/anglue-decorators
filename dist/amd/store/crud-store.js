@@ -46,9 +46,12 @@ define(["exports", "../utils"], function (exports, _utils) {
         }, {
             key: "getById",
             value: function getById(id) {
-                return this.items.find(function (element) {
-                    return element.id === id;
-                });
+                for (var i = 0, ln = this.items.length; i < ln; i++) {
+                    var item = items[i];
+                    if (item.id === id) {
+                        return item;
+                    }
+                }
             }
         }, {
             key: "hasDetails",

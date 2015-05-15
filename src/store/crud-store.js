@@ -83,9 +83,12 @@ export class CrudStoreDecorator {
     }
 
     getById(id) {
-        return this.items.find((element) => {
-            return element.id === id;
-        });
+        for (var i = 0, ln = this.items.length; i < ln; i++) {
+          let item = items[i];
+          if (item.id === id) {
+            return item;
+          }
+        }
     }
 
     hasDetails(id) {
