@@ -46,6 +46,7 @@ define(["exports", "../utils"], function (exports, _utils) {
         }, {
             key: "getById",
             value: function getById(id) {
+                var items = this.items;
                 for (var i = 0, ln = this.items.length; i < ln; i++) {
                     var item = items[i];
                     if (item.id === id) {

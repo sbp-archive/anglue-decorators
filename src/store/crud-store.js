@@ -83,7 +83,8 @@ export class CrudStoreDecorator {
     }
 
     getById(id) {
-        for (var i = 0, ln = this.items.length; i < ln; i++) {
+        var items = this.items
+        for (let i = 0, ln = this.items.length; i < ln; i++) {
           let item = items[i];
           if (item.id === id) {
             return item;
